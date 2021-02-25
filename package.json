@@ -1,0 +1,38 @@
+{
+   "name": "tbcportal-backend",
+   "version": "0.0.1",
+   "description": "Awesome project developed with TypeORM.",
+   "devDependencies": {
+      "@types/bcryptjs": "^2.4.2",
+      "@types/jsonwebtoken": "^8.5.0",
+      "@types/node": "^8.0.29",
+      "copyfiles": "^1.2.0",
+      "nodemon": "^2.0.6",
+      "rimraf": "^3.0.2",
+      "ts-node": "^9.1.1",
+      "typescript": "^3.9.7"
+   },
+   "dependencies": {
+      "@types/nodemailer": "^6.4.0",
+      "@types/swig-email-templates": "^5.0.0",
+      "apollo-server": "^2.21.0",
+      "bcryptjs": "^2.4.3",
+      "class-validator": "^0.12.2",
+      "google-auth-library": "^7.0.2",
+      "graphql": "^15.4.0",
+      "jsonwebtoken": "^8.5.1",
+      "mysql": "^2.14.1",
+      "nodemailer": "^6.4.17",
+      "reflect-metadata": "^0.1.10",
+      "swig-email-templates": "^6.0.0",
+      "type-graphql": "^1.1.1",
+      "typeorm": "^0.2.31"
+   },
+   "scripts": {
+      "build": "rimraf ./build && tsc",
+      "copy": "copyfiles --error --up 1 src/templates/*.* src/templates/**/*.* build",
+      "postbuild": "npm run copy",
+      "start": "node build/index.js",
+      "dev": "nodemon -w src --ext ts --exec ts-node src/index.ts"
+   }
+}

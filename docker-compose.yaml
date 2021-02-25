@@ -1,0 +1,38 @@
+version: '3.7'
+
+services:
+  db:
+    image: mysql:5.7
+    container_name: mysql-node
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "4306:3306"
+    volumes:
+      - ./docker/mysql:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: tbcportal
+      MYSQL_USER: root_user
+      MYSQL_PASSWORD: 54321
+      MYSQL_ROOT_PASSWORD: 54321
+    networks:
+      - backendapp
+
+  #app:
+  #  build:
+  #    context: .
+  #    dockerfile: Dockerfile
+  #  image: nodejs
+  #  container_name: nodejs
+  #  restart: unless-stopped
+  #  volumes:
+  #    - ./src:/src/
+  #  ports:
+  #    - 4001:4001
+  #  depends_on:
+  #    - db
+  #  networks:
+  #    - backendapp
+
+networks:
+  backendapp:
