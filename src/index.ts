@@ -21,5 +21,5 @@ createConnection().then(async connection => {
         context: getContext
     });
 
-    await server.listen(4000);
+    await server.listen(8080);
 }).catch(error => console.log(error));

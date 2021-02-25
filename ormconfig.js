@@ -9,6 +9,6 @@ module.exports = {
   "synchronize": true,
   "logging": false,
   "entities": [
-      "src/models/*.ts"
+      "build/models/*.js"
   ],
 };
