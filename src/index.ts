@@ -4,6 +4,7 @@ import { ApolloServer } from "apollo-server";
 import { buildSchema } from "type-graphql";
 
 import { AuthResolver } from "./resolvers/auth.resolver";
+import { GuidesResolver } from "./resolvers/guides.resolver";
 import { authChecker } from "./auth/auth-checker";
 import { getContext } from "./auth/context.helper";
 
@@ -12,7 +13,7 @@ createConnection().then(async connection => {
 
     await connection.synchronize();
     const schema = await buildSchema({
-        resolvers: [AuthResolver],
+        resolvers: [AuthResolver, GuidesResolver],
         authChecker
     });
 
