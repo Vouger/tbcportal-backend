@@ -3,18 +3,27 @@ import { getRepository } from "typeorm";
 
 import { Guide, Class } from "../models/Guide";
 import { CreateGuideInput } from "../inputs/guide/create.input";
+import {GetGuideInput} from "../inputs/guide/get.input";
 import CurrentUser from "../decorators/current-user";
 import {User} from "../models/User";
 
 @Resolver()
 export class GuidesResolver {
     @Query(() => [Guide])
-    guides(@Arg("filterClass", { defaultValue: '' }) filterClass: string) {
+    guides(@Arg("data") data : GetGuideInput) {
         let where = {};
 
-        if (filterClass !== 'all') {
+        if (data.filterClass !== 'all') {
             where = {
-                class: filterClass === 'all' ? null : filterClass
+                ...where,
+                class: data.filterClass
+            }
+        }
+
+        if (data.filterContent !== 'all') {
+            where = {
+                ...where,
+                content: data.filterContent
             }
         }
 
@@ -25,6 +34,11 @@ export class GuidesResolver {
                 created: "DESC"
             }
         });
+    }
+
+    @Query(() => Guide)
+    guide(@Arg("id") id: string) {
+        return Guide.findOne({ where: { id } });
     }
 
     @Authorized()

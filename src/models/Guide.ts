@@ -15,6 +15,13 @@ export enum Class {
     warrior = 'warrior'
 }
 
+export enum Content {
+    pve = 'pve',
+    pvp = 'pvp',
+    leveling = 'leveling',
+    lore = 'lore'
+}
+
 @Entity()
 @ObjectType()
 export class Guide extends BaseEntity {
@@ -33,6 +40,10 @@ export class Guide extends BaseEntity {
     @Field(() => String)
     @Column({ nullable: true })
     class: Class;
+
+    @Field(() => String)
+    @Column({ nullable: true })
+    content: Content;
 
     @Field(() => Number)
     @Column({default: 0})

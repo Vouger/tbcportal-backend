@@ -1,6 +1,6 @@
 import { InputType, Field } from "type-graphql";
 
-import {Class} from "../../models/Guide";
+import { Class, Content } from "../../models/Guide";
 
 @InputType()
 export class CreateGuideInput {
@@ -12,4 +12,7 @@ export class CreateGuideInput {
 
     @Field()
     class: Class;
+
+    @Field()
+    content: Content;
 }
