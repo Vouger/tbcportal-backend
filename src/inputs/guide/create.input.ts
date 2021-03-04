@@ -11,8 +11,8 @@ export class CreateGuideInput {
     text: string;
 
     @Field()
-    class: Class;
+    className: Class;
 
     @Field()
-    content: Content;
+    contentType: Content;
 }

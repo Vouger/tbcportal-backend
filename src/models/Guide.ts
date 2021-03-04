@@ -39,11 +39,11 @@ export class Guide extends BaseEntity {
 
     @Field(() => String)
     @Column({ nullable: true })
-    class: Class;
+    className: Class;
 
     @Field(() => String)
     @Column({ nullable: true })
-    content: Content;
+    contentType: Content;
 
     @Field(() => Number)
     @Column({default: 0})

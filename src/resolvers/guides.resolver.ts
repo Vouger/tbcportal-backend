@@ -16,14 +16,14 @@ export class GuidesResolver {
         if (data.filterClass !== 'all') {
             where = {
                 ...where,
-                class: data.filterClass
+                className: data.filterClass
             }
         }
 
         if (data.filterContent !== 'all') {
             where = {
                 ...where,
-                content: data.filterContent
+                contentType: data.filterContent
             }
         }
 
