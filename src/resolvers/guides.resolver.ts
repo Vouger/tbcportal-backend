@@ -30,6 +30,7 @@ export class GuidesResolver {
         return getRepository(Guide).find({
             where,
             take: 10,
+            relations: ["user"],
             order: {
                 created: "DESC"
             }
