@@ -38,8 +38,15 @@ export class GuidesResolver {
     }
 
     @Query(() => Guide)
-    guide(@Arg("id") id: string) {
-        return Guide.findOne({ where: { id } });
+    async guide(@Arg("id") id: string) {
+        let guide = await Guide.findOne({where: {id}});
+
+        if (guide) {
+            guide.views = guide.views + 1;
+            await guide.save();
+        }
+
+        return guide;
     }
 
     @Authorized()

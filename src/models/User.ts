@@ -22,16 +22,11 @@ export class User extends BaseEntity {
 
     @Field(() => String)
     @Column()
-    firstname: string;
-
-    @Field(() => String)
-    @Column()
-    lastname: string;
+    nickname: string;
 
     @Field(() => String)
     @Column({default: 'Email'})
     type: Type;
-
 
     @Field(() => Boolean)
     @Column({ nullable: false, default: false })

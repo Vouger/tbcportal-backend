@@ -139,8 +139,7 @@ export class AuthResolver {
         if (!user) {
             user = User.create({
                 email: payload?.email,
-                firstname: payload?.given_name,
-                lastname: payload?.family_name,
+                nickname: payload?.given_name + ' ' + payload?.family_name,
                 type: Type.Google,
                 verified: true
             });
