@@ -45,6 +45,10 @@ export class Guide extends BaseEntity {
     @Column({ nullable: true })
     contentType: Content;
 
+    @Field(() => String)
+    @Column({ nullable: true })
+    thumbnailUrl: string;
+
     @Field(() => Number)
     @Column({default: 0})
     views: number;

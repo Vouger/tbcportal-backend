@@ -11,6 +11,9 @@ export class CreateGuideInput {
     text: string;
 
     @Field()
+    thumbnailUrl: string;
+
+    @Field()
     className: Class;
 
     @Field()
