@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm";
 import { Field, ObjectType, ID } from "type-graphql";
+import * as bcrypt from "bcryptjs";
 
 export enum Type {
     Email = 'Email',
@@ -21,7 +22,7 @@ export class User extends BaseEntity {
     password: string;
 
     @Field(() => String)
-    @Column()
+    @Column({ unique: true })
     nickname: string;
 
     @Field(() => String)
@@ -34,4 +35,20 @@ export class User extends BaseEntity {
 
     @Field(() => String)
     token: string;
+
+    static async getByNickname(nickname: string) {
+        let user = await User.findOne({ where: { nickname: nickname } });
+
+        return user;
+    }
+
+    async setPassword(password: string) {
+        const salt = await bcrypt.genSalt(10);
+
+        this.password = await bcrypt.hash(password, salt);
+    }
+
+    async isPasswordValid(password: string) {
+        return await bcrypt.compare(password, this.password);
+    }
 }

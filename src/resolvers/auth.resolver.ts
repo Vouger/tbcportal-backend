@@ -1,6 +1,6 @@
 import {Resolver, Mutation, Arg, Query} from "type-graphql";
-import * as bcrypt from "bcryptjs";
 import { OAuth2Client } from "google-auth-library"
+import faker from 'faker'
 
 import { User, Type } from "../models/User";
 import { CreateUserInput } from "../inputs/user/create.input";
@@ -22,18 +22,20 @@ export class AuthResolver {
 
     @Mutation(() => User)
     async register(@Arg("data") data: CreateUserInput) {
-        let existingUser = await User.findOne({ where: { email: data.email } });
+        let existingEmail = await User.findOne({ where: { email: data.email } });
 
-        if (existingUser) {
+        if (existingEmail) {
             throw new Error("User with this email already exist!");
         }
 
-        const salt = await bcrypt.genSalt(10);
+        let existingNickname = await User.getByNickname(data.nickname);
 
-        let user = User.create({
-            ...data,
-            password: await bcrypt.hash(data.password, salt)
-        });
+        if (existingNickname) {
+            throw new Error("Nickname is already taken!");
+        }
+
+        let user = User.create(data);
+        await user.setPassword(data.password);
 
         await user.save();
 
@@ -48,8 +50,9 @@ export class AuthResolver {
         try {
             let user = await User.findOneOrFail({ where: { email: data.email } });
 
-            let isValid = await bcrypt.compare(data.password, user.password);
+            let isValid = await user.isPasswordValid(data.password);
             if (!isValid) throw new Error("Email or password invalid!");
+
             if (!user.verified) throw new Error("Email is not verified!");
 
             return {
@@ -110,9 +113,7 @@ export class AuthResolver {
         let user = await User.findOneOrFail(userId);
         if (!user.verified) throw new Error("Email is not verified!");
 
-        const salt = await bcrypt.genSalt(10);
-
-        user.password = await bcrypt.hash(data.password, salt)
+        await user.setPassword(data.password);
 
         await user.save();
 
@@ -137,9 +138,17 @@ export class AuthResolver {
         let user = await User.findOne({ where: { email: payload?.email } });
 
         if (!user) {
+            let nickname = payload?.given_name + ' ' + payload?.family_name;
+
+            const existingNickname = await User.getByNickname(nickname);
+
+            if (existingNickname) {
+                nickname = faker.internet.userName()
+            }
+
             user = User.create({
                 email: payload?.email,
-                nickname: payload?.given_name + ' ' + payload?.family_name,
+                nickname: nickname,
                 type: Type.Google,
                 verified: true
             });
