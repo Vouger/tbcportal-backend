@@ -6,6 +6,7 @@ import { buildSchema } from "type-graphql";
 import { AuthResolver } from "./resolvers/auth.resolver";
 import { GuidesResolver } from "./resolvers/guides.resolver";
 import { UserResolver } from "./resolvers/user.resolver";
+import { TwitchResolver } from "./resolvers/twitch.resolver";
 import { authChecker } from "./auth/auth-checker";
 import { getContext } from "./auth/context.helper";
 
@@ -14,7 +15,7 @@ createConnection().then(async connection => {
 
     await connection.synchronize();
     const schema = await buildSchema({
-        resolvers: [AuthResolver, GuidesResolver, UserResolver],
+        resolvers: [AuthResolver, GuidesResolver, UserResolver, TwitchResolver],
         authChecker
     });
 

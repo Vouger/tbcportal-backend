@@ -1,10 +1,16 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm";
 import { Field, ObjectType, ID } from "type-graphql";
 import * as bcrypt from "bcryptjs";
+import {Class} from "./Guide";
 
 export enum Type {
     Email = 'Email',
     Google = 'Google'
+}
+
+export enum Role {
+    User = 'User',
+    Admin = 'Admin'
 }
 
 @Entity()
@@ -28,6 +34,10 @@ export class User extends BaseEntity {
     @Field(() => String)
     @Column({default: 'Email'})
     type: Type;
+
+    @Field(() => String)
+    @Column({ default: 'User'} )
+    role: Role;
 
     @Field(() => Boolean)
     @Column({ nullable: false, default: false })
