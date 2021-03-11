@@ -40,4 +40,18 @@ export class TwitchResolver {
         await twitchStream.save();
         return twitchStream;
     }
+
+    @Authorized(['Admin'])
+    @Mutation(() => String)
+    async removeTwitchStream(@Arg("id") id: string) {
+        let twitchStream = await TwitchStream.findOne({ where: { id } });
+
+        if (!twitchStream) {
+            throw new Error("Not found!");
+        }
+
+        await twitchStream.remove();
+
+        return 'Removed';
+    }
 }

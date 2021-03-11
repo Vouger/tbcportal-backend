@@ -6,4 +6,7 @@ import { Class, Content } from "../../models/Guide";
 export class CreateTwitchStreamInput {
     @Field()
     name: string;
+
+    @Field()
+    order: number;
 }

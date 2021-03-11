@@ -15,7 +15,12 @@ createConnection().then(async connection => {
 
     await connection.synchronize();
     const schema = await buildSchema({
-        resolvers: [AuthResolver, GuidesResolver, UserResolver, TwitchResolver],
+        resolvers: [
+            AuthResolver,
+            GuidesResolver,
+            UserResolver,
+            TwitchResolver
+        ],
         authChecker
     });
 
