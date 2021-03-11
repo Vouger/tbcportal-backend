@@ -19,6 +19,9 @@ export class TwitchStream extends BaseEntity {
     @Field(() => Number)
     views: number = 0;
 
-    @Field(() => Boolean)
-    isLive: boolean = false;
+    @Field(() => String)
+    gameName: string = '';
+
+    @Field(() => String)
+    logo: string = '';
 }

@@ -20,16 +20,27 @@ export class TwitchService {
     }
 
     public async getStreamInfo(name: string) {
+        return this.twitchRequest("/helix/streams", {
+            user_login: name
+        });
+    }
+
+    public async getUserInfo(name: string) {
+        return this.twitchRequest("/helix/users", {
+            login: name
+        });
+    }
+
+
+    private async twitchRequest(url: string, params: object) {
         return axios({
             method: 'get',
-            url: process.env.TWITCH_API + "/helix/streams",
+            url: process.env.TWITCH_API + url,
             headers: {
                 'Authorization': 'Bearer ' + this.token,
                 'client-id': process.env.TWITCH_CLIENT_ID
             },
-            params: {
-                user_login: name
-            }
+            params: params
         }).then(function (response) {
             return response.data && response.data.data[0];
         }).catch(function (error) {

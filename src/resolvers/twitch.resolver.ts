@@ -9,21 +9,28 @@ import {TwitchStream} from "../models/TwitchStream";
 export class TwitchResolver {
     @Query(() => [TwitchStream])
     async twitch() {
+        let twitchStreams: TwitchStream[] = [];
+
         const twitchService = new TwitchService();
         await twitchService.getToken();
 
-        let streams = await TwitchStream.find();
+        const streams = await TwitchStream.find();
 
         await Promise.all(streams.map(async (item, i) => {
-            const data = await twitchService.getStreamInfo(item.name);
+            const streamInfo = await twitchService.getStreamInfo(item.name);
 
-            if (data && data.viewer_count) {
-                streams[i].views = data.viewer_count;
-                streams[i].isLive = true;
+            if (streamInfo && streamInfo.viewer_count) {
+                const userInfo = await twitchService.getUserInfo(item.name);
+
+                item.views = streamInfo.viewer_count;
+                item.gameName = streamInfo.game_name;
+                item.logo = userInfo.profile_image_url;
+
+                twitchStreams.push(item)
             }
         }))
 
-        return streams;
+        return twitchStreams;
     }
 
     @Authorized(['Admin'])
