@@ -1,7 +1,7 @@
 import { Resolver, Query, Arg, Mutation, Authorized } from "type-graphql";
 import { getRepository } from "typeorm";
 
-import { Guide, Class } from "../models/Guide";
+import { Guide } from "../models/Guide";
 import { CreateGuideInput } from "../inputs/guide/create.input";
 import {GetGuideInput} from "../inputs/guide/get.input";
 import CurrentUser from "../decorators/current-user";
