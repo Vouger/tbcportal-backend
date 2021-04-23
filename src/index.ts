@@ -8,6 +8,7 @@ import { GuidesResolver } from "./resolvers/guides.resolver";
 import { UserResolver } from "./resolvers/user.resolver";
 import { TwitchResolver } from "./resolvers/twitch.resolver";
 import { PostsResolver } from "./resolvers/posts.resolver";
+import { SettingsResolver } from "./resolvers/settings.resolver";
 import { authChecker } from "./auth/auth-checker";
 import { getContext } from "./auth/context.helper";
 
@@ -21,7 +22,8 @@ createConnection().then(async connection => {
             GuidesResolver,
             UserResolver,
             TwitchResolver,
-            PostsResolver
+            PostsResolver,
+            SettingsResolver
         ],
         authChecker
     });
