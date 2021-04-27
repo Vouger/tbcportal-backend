@@ -7,4 +7,10 @@ export class GetGuideInput {
 
     @Field()
     filterContent: string;
+
+    @Field({ nullable: true })
+    take?: number;
+
+    @Field({ nullable: true })
+    skip?: number;
 }

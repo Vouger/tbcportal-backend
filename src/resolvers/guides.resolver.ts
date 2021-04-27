@@ -4,13 +4,14 @@ import { getRepository } from "typeorm";
 import { Guide } from "../models/Guide";
 import { CreateGuideInput } from "../inputs/guide/create.input";
 import {GetGuideInput} from "../inputs/guide/get.input";
+import {GetGuideResponse} from "../responses/guide/get.response";
 import CurrentUser from "../decorators/current-user";
 import {User} from "../models/User";
 
 @Resolver()
 export class GuidesResolver {
-    @Query(() => [Guide])
-    guides(@Arg("data") data : GetGuideInput) {
+    @Query(()  => GetGuideResponse)
+    async guides(@Arg("data") data: GetGuideInput) {
         let where = {};
 
         if (data.filterClass !== 'all') {
@@ -26,15 +27,20 @@ export class GuidesResolver {
                 contentType: data.filterContent
             }
         }
-
-        return getRepository(Guide).find({
+        const [result, total] = await getRepository(Guide).findAndCount({
             where,
-            take: 10,
+            take: data.take || 12,
+            skip: data.skip || 0,
             relations: ["user"],
             order: {
                 created: "DESC"
             }
         });
+
+        return {
+            list: result,
+            total: total
+        }
     }
 
     @Query(() => Guide)

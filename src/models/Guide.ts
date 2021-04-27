@@ -65,4 +65,8 @@ export class Guide extends BaseEntity {
     @Field(() => Date)
     @CreateDateColumn()
     created: Date;
+
+    @Field(() => Boolean)
+    @Column({default: false})
+    isApproved: boolean;
 }
