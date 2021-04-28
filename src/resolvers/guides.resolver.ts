@@ -1,5 +1,5 @@
 import { Resolver, Query, Arg, Mutation, Authorized } from "type-graphql";
-import { getRepository } from "typeorm";
+import {getRepository, Like} from "typeorm";
 
 import { Guide } from "../models/Guide";
 import { CreateGuideInput } from "../inputs/guide/create.input";
@@ -12,28 +12,30 @@ import {User} from "../models/User";
 export class GuidesResolver {
     @Query(()  => GetGuideResponse)
     async guides(@Arg("data") data: GetGuideInput) {
-        let where = {};
+        const {filterClass, filterContent, keyword, take, skip, orderBy} = data;
 
-        if (data.filterClass !== 'all') {
-            where = {
-                ...where,
-                className: data.filterClass
-            }
+        let where = {
+            className: filterClass,
+            contentType: filterContent,
+            title: Like("%" + keyword + "%")
+        };
+
+        if (where.className === 'all') {
+            delete where.className;
         }
 
-        if (data.filterContent !== 'all') {
-            where = {
-                ...where,
-                contentType: data.filterContent
-            }
+        if (where.contentType === 'all') {
+            delete where.contentType;
         }
+
         const [result, total] = await getRepository(Guide).findAndCount({
             where,
-            take: data.take || 12,
-            skip: data.skip || 0,
+            take,
+            skip,
             relations: ["user"],
             order: {
-                created: "DESC"
+                created: orderBy === 'created' ? "DESC" : undefined,
+                views: orderBy === 'views' ? "DESC" : undefined
             }
         });
 
