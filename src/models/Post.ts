@@ -7,15 +7,22 @@ import { User } from "./User";
 @ObjectType()
 export class Post extends BaseEntity {
     @Field(() => ID)
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+    @PrimaryGeneratedColumn()
+    id: number;
 
     @Field(() => String)
-    @Column()
+    @Column({
+        charset: 'utf8',
+        collation: 'utf8_general_ci',
+    })
     title: string;
 
     @Field(() => String)
-    @Column("longtext")
+    @Column({
+        charset: 'utf8',
+        collation: 'utf8_general_ci',
+        type: "longtext"
+    })
     text: string;
 
     @Field(() => String)
