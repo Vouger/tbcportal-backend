@@ -1,7 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm";
 import { Field, ObjectType, ID } from "type-graphql";
 import * as bcrypt from "bcryptjs";
-import {Class} from "./Guide";
 
 export enum Type {
     Email = 'Email',
@@ -28,7 +27,11 @@ export class User extends BaseEntity {
     password: string;
 
     @Field(() => String)
-    @Column({ unique: true })
+    @Column({
+        unique: true,
+        charset: 'utf8',
+        collation: 'utf8_general_ci',
+    })
     nickname: string;
 
     @Field(() => String)

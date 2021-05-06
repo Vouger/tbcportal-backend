@@ -13,6 +13,9 @@ export class Settings extends BaseEntity {
     name: string;
 
     @Field(() => String)
-    @Column()
+    @Column({
+        charset: 'utf8',
+        collation: 'utf8_general_ci',
+    })
     value: string;
 }
