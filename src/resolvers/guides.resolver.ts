@@ -1,10 +1,8 @@
 import { Resolver, Query, Arg, Mutation, Authorized } from "type-graphql";
-import {getRepository, Like} from "typeorm";
 
 import { Guide } from "../models/Guide";
 import { CreateGuideInput } from "../inputs/guide/create.input";
 import { GetGuideInput } from "../inputs/guide/get.input";
-import { AdminGetGuideInput } from "../inputs/guide/admin.get.input";
 import {GetGuideResponse} from "../responses/guide/get.response";
 import CurrentUser from "../decorators/current-user";
 import {User} from "../models/User";
@@ -13,60 +11,13 @@ import {User} from "../models/User";
 export class GuidesResolver {
     @Query(()  => GetGuideResponse)
     async guides(@Arg("data") data: GetGuideInput) {
-        const {filterClass, filterContent, keyword, take, skip, orderBy} = data;
-
-        let where = {
-            isApproved: true,
-            className: filterClass,
-            contentType: filterContent,
-            title: Like("%" + keyword + "%")
-        };
-
-        if (where.className === 'all') {
-            delete where.className;
-        }
-
-        if (where.contentType === 'all') {
-            delete where.contentType;
-        }
-
-        const [result, total] = await getRepository(Guide).findAndCount({
-            where,
-            take,
-            skip,
-            relations: ["user"],
-            order: {
-                created: orderBy === 'created' ? "DESC" : undefined,
-                views: orderBy === 'views' ? "DESC" : undefined
-            }
-        });
-
-        return {
-            list: result,
-            total: total
-        }
+        return Guide.getAndCount({...data, isApproved : true});
     }
 
     @Authorized(['Admin'])
     @Query(()  => GetGuideResponse)
-    async adminGuides(@Arg("data") data: AdminGetGuideInput) {
-        const {take, skip} = data;
-
-        let where = {
-            isApproved: false
-        };
-
-        const [result, total] = await getRepository(Guide).findAndCount({
-            where,
-            take,
-            skip,
-            relations: ["user"]
-        });
-
-        return {
-            list: result,
-            total: total
-        }
+    async adminGuides(@Arg("data") data: GetGuideInput) {
+        return Guide.getAndCount({...data, isApproved : false});
     }
 
     @Query(() => Guide)
@@ -90,5 +41,35 @@ export class GuidesResolver {
         });
         await guide.save();
         return guide;
+    }
+
+    @Authorized(['Admin'])
+    @Mutation(() => String)
+    async approveGuide(@Arg("id") id: string) {
+        let guide = await Guide.findOne({where: {id}});
+
+        if (!guide) {
+            throw new Error("Not found!");
+        }
+
+        guide.isApproved = true;
+        await guide.save();
+
+        return 'Approved';
+    }
+
+    @Authorized(['Admin'])
+    @Mutation(() => String)
+    async hideGuide(@Arg("id") id: string) {
+        let guide = await Guide.findOne({where: {id}});
+
+        if (!guide) {
+            throw new Error("Not found!");
+        }
+
+        guide.isApproved = false;
+        await guide.save();
+
+        return 'Hidden';
     }
 }
