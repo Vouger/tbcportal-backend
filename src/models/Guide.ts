@@ -90,6 +90,20 @@ export class Guide extends BaseEntity {
     @Column({default: false})
     isApproved: boolean;
 
+    static async changeIsApprovedById(id: string, isApproved: boolean)
+    {
+        let guide = await Guide.findOne({where: {id}});
+
+        if (!guide) {
+            return false;
+        }
+
+        guide.isApproved = isApproved;
+        await guide.save();
+
+        return true;
+    }
+
     static async getAndCount(filter: GetGuideInput) {
         const {filterClass, filterContent, keyword, take, page, orderBy, isApproved} = filter;
 

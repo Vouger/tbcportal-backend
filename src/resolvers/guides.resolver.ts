@@ -22,7 +22,10 @@ export class GuidesResolver {
 
     @Query(() => Guide)
     async guide(@Arg("id") id: string) {
-        let guide = await Guide.findOne({where: {id}});
+        let guide = await Guide.findOne({
+            where: {id},
+            relations: [ "user" ]
+        });
 
         if (guide) {
             guide.views = guide.views + 1;
@@ -46,14 +49,11 @@ export class GuidesResolver {
     @Authorized(['Admin'])
     @Mutation(() => String)
     async approveGuide(@Arg("id") id: string) {
-        let guide = await Guide.findOne({where: {id}});
+        const status = await Guide.changeIsApprovedById(id, true)
 
-        if (!guide) {
+        if (! status) {
             throw new Error("Not found!");
         }
-
-        guide.isApproved = true;
-        await guide.save();
 
         return 'Approved';
     }
@@ -61,14 +61,11 @@ export class GuidesResolver {
     @Authorized(['Admin'])
     @Mutation(() => String)
     async hideGuide(@Arg("id") id: string) {
-        let guide = await Guide.findOne({where: {id}});
+        const status = await Guide.changeIsApprovedById(id, false)
 
-        if (!guide) {
+        if (! status) {
             throw new Error("Not found!");
         }
-
-        guide.isApproved = false;
-        await guide.save();
 
         return 'Hidden';
     }
