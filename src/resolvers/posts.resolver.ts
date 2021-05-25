@@ -1,22 +1,17 @@
 import { Resolver, Query, Arg, Mutation, Authorized } from "type-graphql";
-import { getRepository } from "typeorm";
 
 import {CreatePostInput} from "../inputs/post/create.input";
+import {GetPostsResponse} from "../responses/post/get.response";
+import {GetPostsInput} from "../inputs/post/get.input";
 import CurrentUser from "../decorators/current-user";
 import {User} from "../models/User";
 import {Post} from "../models/Post";
 
 @Resolver()
 export class PostsResolver {
-    @Query(() => [Post])
-    posts() {
-        return getRepository(Post).find({
-            take: 10,
-            relations: ["user"],
-            order: {
-                created: "DESC"
-            }
-        });
+    @Query(() => GetPostsResponse)
+    posts(@Arg("data") data: GetPostsInput) {
+        return Post.getAndCount(data);
     }
 
     @Query(() => Post)

@@ -1,7 +1,17 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, JoinColumn, CreateDateColumn } from "typeorm";
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    BaseEntity,
+    ManyToOne,
+    JoinColumn,
+    CreateDateColumn,
+    getRepository
+} from "typeorm";
 import { Field, ObjectType, ID } from "type-graphql";
 
 import { User } from "./User";
+import {GetPostsInput} from "../inputs/post/get.input";
 
 @Entity()
 @ObjectType()
@@ -45,4 +55,29 @@ export class Post extends BaseEntity {
     @Field(() => Date)
     @CreateDateColumn()
     created: Date;
+
+
+    static async getAndCount(filter: GetPostsInput) {
+        const { take, page } = filter;
+
+        let skip = 0;
+
+        if (page && take) {
+            skip = (page - 1 ) * take;
+        }
+
+        const [result, total] = await getRepository(Post).findAndCount({
+            take,
+            skip,
+            relations: ["user"],
+            order: {
+                created: "DESC"
+            }
+        });
+
+        return {
+            list: result,
+            total: total
+        }
+    }
 }

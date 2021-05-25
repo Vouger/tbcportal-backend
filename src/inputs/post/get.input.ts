@@ -1,10 +1,10 @@
 import { InputType, Field } from "type-graphql";
 
 @InputType()
-export class GetPostInput {
-    @Field()
-    limit: string;
+export class GetPostsInput {
+    @Field({ nullable: true, defaultValue: 6 })
+    take?: number;
 
-    @Field()
-    offset: string;
+    @Field({ nullable: true, defaultValue: 1 })
+    page?: number;
 }
