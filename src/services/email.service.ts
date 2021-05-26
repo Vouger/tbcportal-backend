@@ -28,7 +28,12 @@ export class EmailService {
                 to: emailTo,
                 subject: subject,
                 html: html,
-                text: text
+                text: text,
+                attachments: [{
+                    filename: 'logo.png',
+                    path: __dirname +'/../templates/images/logo.png',
+                    cid: 'logo@cid'
+                }]
             }, function(error, info){
                 if (error) {
                     console.log(error);
@@ -44,7 +49,8 @@ export class EmailService {
 
         await this.sendEmail(user.email, 'confirmation', {
             'user': user,
-            'url': url
+            'url': url,
+            'baseUrl': process.env.FRONTEND_URL
         });
     }
 
@@ -53,7 +59,8 @@ export class EmailService {
 
         await this.sendEmail(user.email, 'password', {
             'user': user,
-            'url': url
+            'url': url,
+            'baseUrl': process.env.FRONTEND_URL
         });
     }
 }

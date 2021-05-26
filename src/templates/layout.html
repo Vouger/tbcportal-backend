@@ -1,11 +1,57 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-GB">
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>{{subject}}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 <body>
-{% block body %}
-{% endblock %}
+<table align="center" border="1" cellpadding="0" cellspacing="0" width="600" style="border-collapse: collapse;">
+    <tr>
+        <td align="center" bgcolor="#1e2225" style="padding: 20px 0 20px 0;">
+            <img src="cid:logo@cid" alt="Vanilla LFG" width="48" height="48"  />
+            <span style="color:#fff; font-size: 30px;">Vanilla LFG</span>
+        </td>
+    </tr>
+    <tr>
+        <td bgcolor="#201815" style="padding: 40px 30px 40px 30px;">
+            <table cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;">
+                <tr>
+                    <td>
+                        <p style="color:#f8b700; font-size: 24px; text-align: center; margin: 0;">
+                            {% block title %}
+                            {% endblock %}
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 25px 0 35px 0;">
+                        <p style="color:#f8b700; text-align: center; font-size: 21px; margin: 0;">
+                            {% block body %}
+                            {% endblock %}
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p style="text-align: center; margin: 0;">
+                            {% block footer %}
+                            {% endblock %}
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td bgcolor="#1e2225" style="padding:20px;">
+            <p style="margin: 0;">
+                <a href="{{baseUrl}}" style="color:#f8b700; padding:0 10px;">Главная</a>
+                <a href="{{baseUrl}}/news" style="color:#f8b700; padding:0 10px;">Новости</a>
+                <a href="{{baseUrl}}/guides" style="color:#f8b700; padding:0 10px;">Гайды</a>
+            </p>
+        </td>
+    </tr>
+</table>
 </body>
 </html>

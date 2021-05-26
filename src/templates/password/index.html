@@ -1,7 +1,15 @@
 {% extends "../layout.html" %}
 
+{% block title %}
+    Добрый день, {{user.nickname}}!
+{% endblock %}
+
 {% block body %}
-    Hi there {{user.nickname}} <br>
-    This is password recovery email <br>
-    <a href="{{url}}">Set new password</a>
+    Если вы хотите сбросить пароль, нажмите на кнопку ниже <br>
+{% endblock %}
+
+{% block footer %}
+<a style="display: block; font-size: 24px; text-decoration: none; padding: 20px 10px; margin:0 auto; color:#fff; background: #5b1a10; border-radius: 5px;" href="{{url}}">
+    Форма сброса пароля
+</a>
 {% endblock %}

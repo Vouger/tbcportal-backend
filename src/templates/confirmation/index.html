@@ -1,7 +1,15 @@
 {% extends "../layout.html" %}
 
+{% block title %}
+    Добро пожаловать на Vanilla LFG, {{user.nickname}}!
+{% endblock %}
+
 {% block body %}
-    Hi there {{user.nickname}} <br>
-    Please confirm your email by clicking button link below <br>
-    <a href="{{url}}">Confirm Email</a>
+    Пожалуйста, подтвердите свой email нажав на кнопку ниже
+{% endblock %}
+
+{% block footer %}
+    <a style="display: block; font-size: 24px; text-decoration: none; padding: 20px 10px; margin:0 auto; color:#fff; background: #5b1a10; border-radius: 5px;" href="{{url}}">
+        Подтвердить Email
+    </a>
 {% endblock %}
