@@ -61,7 +61,7 @@ export class TwitchResolver {
         let existingStream = await TwitchStream.findOne({ where: { name: data.name } });
 
         if (existingStream) {
-            throw new Error("Twitch Stream already added!");
+            throw new Error("Этот стример уже добавлен!");
         }
 
         let twitchStream = TwitchStream.create(data);
@@ -76,7 +76,7 @@ export class TwitchResolver {
         let twitchStream = await TwitchStream.findOne({ where: { id: data.id } });
 
         if (!twitchStream) {
-            throw new Error("Twitch Stream is not found!");
+            throw new Error("Стример не найден!");
         }
 
         twitchStream.name = data.name;
@@ -93,11 +93,13 @@ export class TwitchResolver {
         let twitchStream = await TwitchStream.findOne({ where: { id } });
 
         if (!twitchStream) {
-            throw new Error("Not found!");
+            throw new Error("Стример не найден!");
         }
+
+        const name = twitchStream.name;
 
         await twitchStream.remove();
 
-        return 'Removed';
+        return `Стример ${name} удален`;
     }
 }

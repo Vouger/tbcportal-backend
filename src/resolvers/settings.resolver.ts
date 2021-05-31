@@ -30,6 +30,6 @@ export class SettingsResolver {
             await setting.save();
         })
 
-        return 'Success'
+        return 'Сохранено'
     }
 }

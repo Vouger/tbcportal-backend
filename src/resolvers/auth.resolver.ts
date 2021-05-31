@@ -25,13 +25,13 @@ export class AuthResolver {
         let existingEmail = await User.findOne({ where: { email: data.email } });
 
         if (existingEmail) {
-            throw new Error("User with this email already exist!");
+            throw new Error("Пользователь с таким имейлом уже зарегистрирован");
         }
 
         let existingNickname = await User.getByNickname(data.nickname);
 
         if (existingNickname) {
-            throw new Error("Nickname is already taken!");
+            throw new Error("Такой nickname уже занят!");
         }
 
         let user = User.create(data);
@@ -51,16 +51,16 @@ export class AuthResolver {
             let user = await User.findOneOrFail({ where: { email: data.email } });
 
             let isValid = await user.isPasswordValid(data.password);
-            if (!isValid) throw new Error("Email or password invalid!");
+            if (!isValid) throw new Error("Имейл или пароль введен неверно!");
 
-            if (!user.verified) throw new Error("Email is not verified!");
+            if (!user.verified) throw new Error("Email не подтвержден!");
 
             return {
                 ...user,
                 token: getToken({user, expires: data.remember ? '1d' : '1h'})
             };
         } catch (e) {
-            throw new Error("Email or password invalid!");
+            throw new Error("Имейл или пароль введен неверно!");
         }
     }
 
@@ -71,11 +71,11 @@ export class AuthResolver {
         try {
             userId = parseToken(data.token);
         } catch (e) {
-            throw new Error("User not found!");
+            throw new Error("Пользователь не найден!");
         }
 
         let user = await User.findOneOrFail(userId);
-        if (user.verified) throw new Error("Email already verified!");
+        if (user.verified) throw new Error("Этот email уже подтвержден!");
 
         user.verified = true;
         await user.save();
@@ -96,7 +96,7 @@ export class AuthResolver {
 
             return user;
         } catch (e) {
-            throw new Error("Email is invalid!");
+            throw new Error("Пользователь с таким имейлом не найден!");
         }
     }
 
@@ -107,11 +107,11 @@ export class AuthResolver {
         try {
             userId = parseToken(data.token);
         } catch (e) {
-            throw new Error("User not found!");
+            throw new Error("Пользователь с таким имейлом не найден!");
         }
 
         let user = await User.findOneOrFail(userId);
-        if (!user.verified) throw new Error("Email is not verified!");
+        if (!user.verified) throw new Error("Email не подтвержден!");
 
         await user.setPassword(data.password);
 

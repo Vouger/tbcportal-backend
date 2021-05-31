@@ -18,7 +18,7 @@ export class UserResolver {
         let existingNickname = await User.getByNickname(data.nickname);
 
         if (existingNickname && existingNickname.id !== user.id) {
-            throw new Error("Nickname is already taken!");
+            throw new Error("Такой nickname уже занят!");
         }
 
         user.nickname = data.nickname;

@@ -52,10 +52,10 @@ export class GuidesResolver {
         const status = await Guide.changeIsApprovedById(id, true)
 
         if (! status) {
-            throw new Error("Not found!");
+            throw new Error("Гайд не найден!");
         }
 
-        return 'Approved';
+        return 'Подтвержден';
     }
 
     @Authorized(['Admin'])
@@ -64,9 +64,9 @@ export class GuidesResolver {
         const status = await Guide.changeIsApprovedById(id, false)
 
         if (! status) {
-            throw new Error("Not found!");
+            throw new Error("Гайд не найден!");
         }
 
-        return 'Hidden';
+        return 'Спрятан';
     }
 }
