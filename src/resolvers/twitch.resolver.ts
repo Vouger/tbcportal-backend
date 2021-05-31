@@ -1,5 +1,6 @@
 import { Resolver, Query, Arg, Mutation, Authorized } from "type-graphql";
 
+import {GetTwitchStreamInput} from "../inputs/twitch/get.input";
 import {CreateTwitchStreamInput} from "../inputs/twitch/create.input";
 import {UpdateTwitchStreamInput} from "../inputs/twitch/update.input";
 import {TwitchService} from "../services/twitch.service";
@@ -10,17 +11,15 @@ import {getRepository} from "typeorm";
 @Resolver()
 export class TwitchResolver {
     @Query(() => [TwitchStream])
-    async twitch() {
+    async twitch(@Arg("data") data: GetTwitchStreamInput) {
+        const { limit } = data;
+
         let twitchStreams: TwitchStream[] = [];
 
         const twitchService = new TwitchService();
         await twitchService.getToken();
 
-        const streams = await getRepository(TwitchStream).find({
-            order: {
-                order: "ASC"
-            }
-        });
+        const streams = await TwitchStream.find();
 
         await Promise.all(streams.map(async (item, i) => {
             const streamInfo = await twitchService.getStreamInfo(item.name);
@@ -36,7 +35,11 @@ export class TwitchResolver {
             }
         }))
 
-        return twitchStreams;
+        twitchStreams.sort(function(stream1, stream2) {
+            return stream2.views - stream1.views;
+        });
+
+        return twitchStreams.slice(0, limit);
     }
 
     @Authorized(['Admin'])
