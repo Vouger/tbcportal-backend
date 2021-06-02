@@ -29,7 +29,7 @@ export class TwitchResolver {
 
                 item.views = streamInfo.viewer_count;
                 item.gameName = streamInfo.game_name;
-                item.logo = userInfo.profile_image_url.replace('profile_image-300x300', 'profile_image-50x50');
+                item.logo = userInfo.profile_image_url.replace('-300x300.', '-50x50.');
 
                 twitchStreams.push(item)
             }
