@@ -4,6 +4,7 @@ import { ApolloServer } from "apollo-server";
 import { buildSchema } from "type-graphql";
 
 import { AuthResolver } from "./resolvers/auth.resolver";
+import { SocialResolver } from "./resolvers/social.resolver";
 import { GuidesResolver } from "./resolvers/guides.resolver";
 import { UserResolver } from "./resolvers/user.resolver";
 import { TwitchResolver } from "./resolvers/twitch.resolver";
@@ -19,6 +20,7 @@ createConnection().then(async connection => {
     const schema = await buildSchema({
         resolvers: [
             AuthResolver,
+            SocialResolver,
             GuidesResolver,
             UserResolver,
             TwitchResolver,

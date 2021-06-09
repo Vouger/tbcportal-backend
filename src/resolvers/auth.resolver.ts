@@ -1,14 +1,11 @@
 import {Resolver, Mutation, Arg, Query} from "type-graphql";
-import { OAuth2Client } from "google-auth-library"
-import faker from 'faker'
 
-import { User, Type } from "../models/User";
+import { User } from "../models/User";
 import { CreateUserInput } from "../inputs/user/create.input";
 import { LoginInput } from "../inputs/auth/login.input";
 import { ConfirmationInput } from "../inputs/auth/confirmation.input";
 import { PasswordChangeInput } from "../inputs/auth/password/change.input";
 import { PasswordRequestInput } from "../inputs/auth/password/request.input";
-import { GoogleInput } from "../inputs/auth/google.input";
 
 import { getToken, parseToken } from "../auth/token.helper";
 import { EmailService } from "../services/email.service";
@@ -120,44 +117,6 @@ export class AuthResolver {
         return {
             ...user,
             token: getToken({user})
-        };
-    }
-
-    @Mutation(() => User)
-    async googleAuth(@Arg("data") data: GoogleInput) {
-        const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
-        const token = data.token
-
-        const ticket = await client.verifyIdToken({
-            idToken: token,
-            audience: process.env.GOOGLE_CLIENT_ID
-        });
-
-        const payload = ticket.getPayload();
-
-        let user = await User.findOne({ where: { email: payload?.email } });
-
-        if (!user) {
-            let nickname = payload?.given_name + ' ' + payload?.family_name;
-
-            const existingNickname = await User.getByNickname(nickname);
-
-            if (existingNickname) {
-                nickname = faker.internet.userName()
-            }
-
-            user = User.create({
-                email: payload?.email,
-                nickname: nickname,
-                type: Type.Google,
-                verified: true
-            });
-            await user.save();
-        }
-
-        return {
-            ...user,
-            token: getToken({user, expires: '1d'})
         };
     }
 }

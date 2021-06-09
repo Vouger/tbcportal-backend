@@ -1,10 +1,12 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm";
 import { Field, ObjectType, ID } from "type-graphql";
 import * as bcrypt from "bcryptjs";
+import faker from "faker";
 
 export enum Type {
     Email = 'Email',
-    Google = 'Google'
+    Google = 'Google',
+    Discord = 'Discord'
 }
 
 export enum Role {
@@ -63,5 +65,28 @@ export class User extends BaseEntity {
 
     async isPasswordValid(password: string) {
         return await bcrypt.compare(password, this.password);
+    }
+
+    static async getOrCreate(email: string, nickname: string, type: Type) {
+        let user = await User.findOne({ where: { email } });
+
+        if (!user) {
+            const existingNickname = await User.getByNickname(nickname);
+
+            if (existingNickname) {
+                nickname = faker.internet.userName()
+            }
+
+            user = User.create({
+                email: email,
+                nickname: existingNickname ? faker.internet.userName() : nickname,
+                type: type,
+                verified: true
+            });
+
+            await user.save();
+        }
+
+        return user;
     }
 }
