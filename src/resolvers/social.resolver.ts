@@ -45,7 +45,7 @@ export class SocialResolver {
 
         const userInfo = await discordService.getUserInfo();
 
-        if (userInfo.email) {
+        if (userInfo?.email) {
             const user = await User.getOrCreate(userInfo.email, userInfo.username, Type.Discord);
 
             return {
