@@ -9,6 +9,7 @@ import {
     getRepository
 } from "typeorm";
 import { Field, ObjectType, ID } from "type-graphql";
+import {decode} from 'html-entities';
 
 import { User } from "./User";
 import {GetPostsInput} from "../inputs/post/get.input";
@@ -56,6 +57,8 @@ export class Post extends BaseEntity {
     @CreateDateColumn()
     created: Date;
 
+    @Field(() => String)
+    previewText: string = '';
 
     static async getAndCount(filter: GetPostsInput) {
         const { take, page } = filter;
@@ -74,6 +77,13 @@ export class Post extends BaseEntity {
                 created: "DESC"
             }
         });
+
+        result.map((item) => {
+            item.previewText = decode(item.text.replace(/<[^>]+>/g, ''));
+            if (item.previewText.length > 200) {
+                item.previewText = item.previewText.substr(0, 200) + '...'
+            }
+        })
 
         return {
             list: result,
