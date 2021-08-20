@@ -1,6 +1,7 @@
 import { Resolver, Query, Arg, Mutation, Authorized } from "type-graphql";
 
 import {CreatePostInput} from "../inputs/post/create.input";
+import {UpdatePostInput} from "../inputs/post/update.input";
 import {GetPostsResponse} from "../responses/post/get.response";
 import {GetPostsInput} from "../inputs/post/get.input";
 import CurrentUser from "../decorators/current-user";
@@ -38,11 +39,29 @@ export class PostsResolver {
     }
 
     @Authorized(['Admin'])
+    @Mutation(() => Post)
+    async updatePost(@Arg("data") data: UpdatePostInput) {
+        let post = await Post.findOne({ where: { id: data.id } });
+
+        if (!post) {
+            throw new Error("Новость не найдена!");
+        }
+
+        post.title = data.title;
+        post.thumbnailUrl = data.thumbnailUrl;
+        post.text = data.text;
+
+        await post.save();
+
+        return post;
+    }
+
+    @Authorized(['Admin'])
     @Mutation(() => String)
     async deletePost(@Arg("id") id: string) {
         let post = await Post.findOne({ where: { id } });
 
-        if (! post) {
+        if (!post) {
             throw new Error("Новость не найдена!");
         }
 
