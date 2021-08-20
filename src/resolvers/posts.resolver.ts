@@ -36,4 +36,18 @@ export class PostsResolver {
         await post.save();
         return post;
     }
+
+    @Authorized(['Admin'])
+    @Mutation(() => String)
+    async deletePost(@Arg("id") id: string) {
+        let post = await Post.findOne({ where: { id } });
+
+        if (! post) {
+            throw new Error("Новость не найдена!");
+        }
+
+        await post.remove();
+
+        return 'Новость удалена';
+    }
 }
